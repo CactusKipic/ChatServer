@@ -1,6 +1,8 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import main.core.Client;
 
@@ -18,5 +20,17 @@ public class SessionServer extends Session{
 	
 	public void addClient(Client client) {
 		ListClients.put(client.getName(), client);
+	}
+	
+	public void deleteClient(String name) {
+		ListClients.remove(name);
+	}
+	
+	public Client getClient(String name) {
+		return ListClients.get(name);
+	}
+	
+	public List<Client> getClients() {
+		return new ArrayList<Client>(ListClients.values());
 	}
 }
