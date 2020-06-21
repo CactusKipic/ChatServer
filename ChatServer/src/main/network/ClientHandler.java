@@ -52,16 +52,20 @@ public class ClientHandler implements Runnable{
 	            
 	            switch(requete.substring(0, 4).toUpperCase()){
 	               case "STDBY":
+	            	   readingPile = true;
 	            	   if(messagePile.isEmpty())
 	            		   reponse = "STDBY";
 	            	   else {
 	            		   Message msg = messagePile.pop();
 	            		   reponse = (messagePile.isEmpty() ? "MDMSG" : "LAMSG") +gson.toJson(msg);
 	            	   }
+	            	   readingPile = false;
 	                  break;
 	               case "NXMSG":
+	            	   readingPile = true;
             		   Message msg = messagePile.pop();
             		   reponse = (messagePile.isEmpty() ? "MDMSG" : "LAMSG") +gson.toJson(msg);
+	            	   readingPile = false;
 	            	   break;
 	               case "MSGSD":
 	            	   if(session != null) {
@@ -77,9 +81,14 @@ public class ClientHandler implements Runnable{
 	            	   if(session == null) {
 	            		   session = SessionServer.createSession(list.get(0));
 	            	   }
-	            	   session.addClient(new Client(list.get(1),this));
+	            	   if(session.getClient(list.get(1))==null) {
+		            	   session.addClient(new Client(list.get(1),this));
+		            	   reponse = "ACKCO";
+	            	   }else {
+	            		   reponse = "REFCO";
+	            	   }
 	            	   break;
-	               case "CLOSE":
+	               case "ENDCO":
 	            	   reponse = "ENDCO"; 
 	            	   endConnexion = true;
 	            	   break;
