@@ -90,6 +90,7 @@ public class SessionHandler implements Runnable{
             		   message = gson.fromJson(requete.substring(4), Message.class);
             		   // Appel fonction pour affichage du message
             		   state = "WTMSG";
+            		   
 	            	   break;
 	               case "LAMSG":
             		   message = gson.fromJson(requete.substring(4), Message.class);
