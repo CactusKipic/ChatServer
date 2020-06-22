@@ -7,6 +7,7 @@ public abstract class Session {
 	
 	protected Session(String Name) {
 		this.Name = Name;
+		this.Description = "";
 	}
 	
 	protected Session(String Name, String Description) {
