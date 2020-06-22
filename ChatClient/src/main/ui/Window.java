@@ -1,20 +1,23 @@
-package main;
+package main.ui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class window_1 extends JFrame {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
+
+public class Window extends JFrame implements ActionListener{
 	
-	static String username1;
+	private String username;
+	private javax.swing.JLabel label1;
+	private javax.swing.JTextArea display1;
+	private javax.swing.JButton send1;
+	private javax.swing.JTextArea text1;
 
 	private JPanel contentPane;
 
@@ -25,7 +28,7 @@ public class window_1 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					window_1 frame = new window_1();
+					Window frame = new Window();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +40,8 @@ public class window_1 extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public window_1() {
+	
+	public Window() {
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,8 +67,7 @@ public class window_1 extends JFrame {
 					if(s.equals("")) {
 						return;
 					}
-					display1.append(username1 + ":" + s + "\n");
-					window_2.sendText();
+					display1.append(username + ":" + s + "\n");
 					text1.setText("");
 				
 			}
@@ -72,7 +75,7 @@ public class window_1 extends JFrame {
 		send1.setBounds(312, 395, 92, 52);
 		contentPane.add(send1);
 		
-		label1 = new JLabel("Chat avec:" + username1);
+		label1 = new JLabel("Chat avec:" + username);
 		label1.setBounds(10, 10, 246, 37);
 		contentPane.add(label1);
 		
@@ -80,17 +83,26 @@ public class window_1 extends JFrame {
 		quitter1.setBounds(305, 10, 92, 37);
 		contentPane.add(quitter1);
 	}
+	
+	public String getUsername() {
+		return username;
+	}
 
-	public static void sendText() {
+	public void sendText() {
 		String s = window_2.text2.getText();
 		if(s.equals("")) {
 			return;
 		}
 		display1.append(window_2.username2 + ":" + s + "\n");
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		switch(e.getActionCommand()) {
+			case "ENVOYER":
+				text1.getText();
+				break;
+		}
+	}
 	
-	private javax.swing.JLabel label1;
-	private static javax.swing.JTextArea display1;
-	private javax.swing.JButton send1;
-	public static javax.swing.JTextArea text1;
 }
