@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 
 import main.network.SessionHandler;
 
-public class Server extends JFrame implements ActionListener{
+public class FrameConnection extends JFrame implements ActionListener{
 	
 	/**
 	 * 
@@ -27,28 +27,11 @@ public class Server extends JFrame implements ActionListener{
 	private JTextField sessionname= new JTextField();
 	private JTextField ip = new JTextField();
 	private JTextField port = new JTextField();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		System.out.println("Lancement server");
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Server frame = new Server();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public Server() {
+	public FrameConnection() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(500,300));
@@ -60,6 +43,7 @@ public class Server extends JFrame implements ActionListener{
 		JTextArea jtxtuser = new JTextArea();
 		jtxtuser.setText("Username:");
 		jtxtuser.setSize(100,60);
+		jtxtuser.setEditable(false);
 		contentPane.add(jtxtuser);
 		
 		username = new JTextField();
@@ -76,6 +60,7 @@ public class Server extends JFrame implements ActionListener{
 		JTextArea jtxtsession = new JTextArea();
 		jtxtsession.setText("Session name:");
 		jtxtsession.setSize(100,60);
+		jtxtsession.setEditable(false);
 		contentPane.add(jtxtsession);
 		
 		sessionname = new JTextField();
@@ -87,6 +72,7 @@ public class Server extends JFrame implements ActionListener{
 		JTextArea jtxtip = new JTextArea();
 		jtxtip.setText("IP Server:");
 		jtxtip.setSize(100,60);
+		jtxtip.setEditable(false);
 		contentPane.add(jtxtip);
 		
 		ip.addActionListener(this);
@@ -97,6 +83,7 @@ public class Server extends JFrame implements ActionListener{
 		JTextArea jtxtport = new JTextArea();
 		jtxtport.setText(":");
 		jtxtport.setSize(25,60);
+		jtxtport.setEditable(false);
 		contentPane.add(jtxtport);
 		
 		port.addActionListener(this);

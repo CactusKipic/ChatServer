@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,15 +127,12 @@ public class SessionServer extends Session{
 		File f = new File(Main.PATH + this.getSessionName() +"/"+message.getDate()+".messages");
 		if(!f.exists())
 			f.getParentFile().mkdirs();
+		Gson gson = new Gson();
+		String format = gson.toJson(message)+"\n";
 		
-		String format = "\r"+message.getDate() + " | "+message.getAuthor()+":\r"+message.getMessage();
-		
-		PrintWriter PW;
 		try {
-			PW = new PrintWriter(f,"UTF-8");
-			PW.print(format);
-			PW.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			Files.write(f.toPath(), format.getBytes(), StandardOpenOption.APPEND);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

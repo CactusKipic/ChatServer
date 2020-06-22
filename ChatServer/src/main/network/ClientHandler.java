@@ -20,6 +20,7 @@ public class ClientHandler implements Runnable{
 	private boolean readingPile = false;
 	private BufferedReader reader;
 	private SessionServer session;
+	private String clientName;
 	
 	public ClientHandler(Socket socket) {
 		this.socket = socket;
@@ -89,9 +90,10 @@ public class ClientHandler implements Runnable{
 	            		   session = SessionServer.createSession(list[0]);
 	            	   }
             		   System.out.println("Succès ? "+session!=null);
-	            	   if(session.getClient(list[1]) == null) {
+            		   clientName = list[1];
+	            	   if(session.getClient(clientName) == null) {
 	            		   System.out.println("Session: "+session.getSessionName());
-		            	   session.addClient(new Client(list[1],this));
+		            	   session.addClient(new Client(clientName,this));
 		            	   reponse = "ACKCO";
 	            	   }else {
 	            		   System.out.println("Erreur lors de la création ou client pseudo déjà utilisé");
@@ -114,6 +116,7 @@ public class ClientHandler implements Runnable{
 	            if(endConnexion){
 	            	System.out.println("Fermeture connexion.");
 	            	socket.close();
+	            	session.deleteClient(clientName);
 	            	break;
 	            }        
 			} catch (IOException e) {
