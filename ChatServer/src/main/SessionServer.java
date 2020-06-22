@@ -125,8 +125,14 @@ public class SessionServer extends Session{
 	
 	public void SaveMessage(Message message) {
 		File f = new File(Main.PATH + this.getSessionName() +"/"+message.getDate()+".messages");
-		if(!f.exists())
+		if(!f.exists()) {
 			f.getParentFile().mkdirs();
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		Gson gson = new Gson();
 		String format = gson.toJson(message)+"\n";
 		
