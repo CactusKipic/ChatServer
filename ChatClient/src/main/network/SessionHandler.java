@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import com.google.gson.Gson;
 
 import main.Message;
+import main.ui.ChatRoom;
 
 public class SessionHandler implements Runnable{
 	
@@ -84,17 +85,17 @@ public class SessionHandler implements Runnable{
 	            
 	            switch(reponse.substring(0, 4).toUpperCase()){
 	               case "STDBY":
+	            	   System.out.println("Standing by.");
 	            	   this.wait(100);
 	                  break;
 	               case "MDMSG":
             		   message = gson.fromJson(requete.substring(4), Message.class);
-            		   // Appel fonction pour affichage du message
+            		   ChatRoom.newMessage(message);
             		   state = "WTMSG";
-            		   
 	            	   break;
 	               case "LAMSG":
             		   message = gson.fromJson(requete.substring(4), Message.class);
-            		   // Appel fonction pour affichage du message
+            		   ChatRoom.newMessage(message);
             		   state = "STDBY";
 	            	   break;
 	               case "ACKMS":

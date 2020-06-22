@@ -52,6 +52,7 @@ public class ClientHandler implements Runnable{
 	            
 	            switch(requete.substring(0, 4).toUpperCase()){
 	               case "STDBY":
+	            	   System.out.println("Standing by.");
 	            	   readingPile = true;
 	            	   if(messagePile.isEmpty())
 	            		   reponse = "STDBY";

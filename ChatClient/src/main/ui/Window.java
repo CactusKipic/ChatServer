@@ -3,6 +3,8 @@ package main.ui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,11 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import main.Message;
+
 public class Window extends JFrame implements ActionListener{
 	
 	private String username;
 	private javax.swing.JLabel label1;
-	private javax.swing.JTextArea display1;
+	private javax.swing.JTextArea display;
 	private javax.swing.JButton send1;
 	private javax.swing.JTextArea text1;
 
@@ -55,9 +59,9 @@ public class Window extends JFrame implements ActionListener{
 		text1.setBounds(10, 395, 292, 52);
 		contentPane.add(text1);
 		
-		display1 = new JTextArea();
-		display1.setBounds(10, 57, 394, 328);
-		contentPane.add(display1);
+		display = new JTextArea();
+		display.setBounds(10, 57, 394, 328);
+		contentPane.add(display);
 		
 		send1 = new JButton("ENVOYER");
 		send1.addActionListener(new ActionListener() {
@@ -67,7 +71,7 @@ public class Window extends JFrame implements ActionListener{
 					if(s.equals("")) {
 						return;
 					}
-					display1.append(username + ":" + s + "\n");
+					display.append(username + ":" + s + "\n");
 					text1.setText("");
 				
 			}
@@ -93,16 +97,21 @@ public class Window extends JFrame implements ActionListener{
 		if(s.equals("")) {
 			return;
 		}
-		display1.append(window_2.username2 + ":" + s + "\n");
+		display.append(window_2.username2 + ":" + s + "\n");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
 			case "ENVOYER":
-				text1.getText();
+				ChatRoom.getSessionHandler().sendMessage(new Message(username, text1.getText(),
+						new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
 				break;
 		}
+	}
+
+	public void newMessage(Message message) {
+		display.append(message.getDate()+" | "+message.getAuthor()+": "+message.getMessage()+"\r");
 	}
 	
 }

@@ -27,7 +27,6 @@ public class Server extends JFrame implements ActionListener{
 	private JTextField sessionname= new JTextField();
 	private JTextField ip = new JTextField();
 	private JTextField port = new JTextField();
-	private static ChatRoom chatroom;
 
 	/**
 	 * Launch the application.
@@ -130,7 +129,7 @@ public class Server extends JFrame implements ActionListener{
 		switch(e.getActionCommand()) {
 			case "REJOINDRE SESSION":
 				if(ip.getText() != "" && port.getText() != "" && username.getText() != "" && sessionname.getText() != "")
-				chatroom = new ChatRoom(new SessionHandler(ip.getText(), Integer.parseInt(port.getText()),
+				ChatRoom.initChatRoom(new SessionHandler(ip.getText(), Integer.parseInt(port.getText()),
 						username.getText(), sessionname.getText()));
 				else 
 					JOptionPane.showMessageDialog(null, "Remplissez chacun des champs.");
