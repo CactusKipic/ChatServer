@@ -66,11 +66,17 @@ public class SessionHandler implements Runnable{
 					case "CTION":
 						requete = "CTION"+sessionName+"|"+username;
 						break;
+					case "WTMSG":
+						requete = "NXMSG";
 					case "ENDCO":
 						requete = "ENDCO";
 						break;
 				}
+
 	            
+	            // Envoie requête
+	            writer.write(requete);
+	            writer.flush();
 	            
 	            // Attente de la réponse du serveur
 	            String reponse = read();
@@ -103,8 +109,10 @@ public class SessionHandler implements Runnable{
 	            	   state = "ENDCO";
 	            	   break;
 	               case "UNKWN":
-	            	   if(state == "CTION")
+	            	   if(state == "CTION") {
+	            		   System.out.println("Réponse inconnue du serveur lors de la tentative de connexion, arrêt de la connexion.");
 	            		   state = "ENDCO";
+	            	   }
 	            	   else {
 		            	   System.out.println("Erreur de communication avec le serveur, retour en STDBY.");
 		            	   state = "STDBY";
@@ -114,14 +122,10 @@ public class SessionHandler implements Runnable{
 	            	   System.out.println("Connexion terminée avec succès");
 	            	   endConnexion = true;
 	            	   break;
-	               default: 
-	            	   reponse = "UNKWN";                     
+	               default:
+	            	   System.out.println("Unknown response from server.");
 	            	   break;
 	            }
-	            
-	            // Envoie réponse
-	            writer.write(reponse);
-	            writer.flush();
 	            
 	            if(endConnexion){
 	            	if(state == "ENDCO") {
