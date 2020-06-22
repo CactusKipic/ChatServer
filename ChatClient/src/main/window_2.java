@@ -1,4 +1,4 @@
-package main.ui;
+package main;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -61,6 +61,7 @@ public class window_2 extends JFrame {
 					return;
 				}
 				display2.append(username2 + ":" + s + "\n");
+				window_1.sendText();
 				text2.setText("");
 			}
 		});
@@ -76,6 +77,13 @@ public class window_2 extends JFrame {
 		contentPane.add(quitter2);
 	}
 
+	public static void sendText() {
+		String s = window_1.text1.getText();
+		if(s.equals("")) {
+			return;
+		}
+		display2.append(window_1.username1 + ":" + s + "\n");
+	}
 	
 	private javax.swing.JLabel label2;
 	private static javax.swing.JTextArea display2;
