@@ -1,23 +1,20 @@
-package main.ui;
+package main;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class Window extends JFrame implements ActionListener{
+public class window_1 extends JFrame {
 	
-	private String username;
-	private javax.swing.JLabel label1;
-	private javax.swing.JTextArea display1;
-	private javax.swing.JButton send1;
-	private javax.swing.JTextArea text1;
+	static String username1;
 
 	private JPanel contentPane;
 
@@ -28,7 +25,7 @@ public class Window extends JFrame implements ActionListener{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Window frame = new Window();
+					window_1 frame = new window_1();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,8 +37,7 @@ public class Window extends JFrame implements ActionListener{
 	/**
 	 * Create the frame.
 	 */
-	
-	public Window() {
+	public window_1() {
 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,7 +63,8 @@ public class Window extends JFrame implements ActionListener{
 					if(s.equals("")) {
 						return;
 					}
-					display1.append(username + ":" + s + "\n");
+					display1.append(username1 + ":" + s + "\n");
+					window_2.sendText();
 					text1.setText("");
 				
 			}
@@ -75,7 +72,7 @@ public class Window extends JFrame implements ActionListener{
 		send1.setBounds(312, 395, 92, 52);
 		contentPane.add(send1);
 		
-		label1 = new JLabel("Chat avec:" + username);
+		label1 = new JLabel("Chat avec:" + username1);
 		label1.setBounds(10, 10, 246, 37);
 		contentPane.add(label1);
 		
@@ -83,26 +80,17 @@ public class Window extends JFrame implements ActionListener{
 		quitter1.setBounds(305, 10, 92, 37);
 		contentPane.add(quitter1);
 	}
-	
-	public String getUsername() {
-		return username;
-	}
 
-	public void sendText() {
+	public static void sendText() {
 		String s = window_2.text2.getText();
 		if(s.equals("")) {
 			return;
 		}
 		display1.append(window_2.username2 + ":" + s + "\n");
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		switch(e.getActionCommand()) {
-			case "ENVOYER":
-				text1.getText();
-				break;
-		}
-	}
 	
+	private javax.swing.JLabel label1;
+	private static javax.swing.JTextArea display1;
+	private javax.swing.JButton send1;
+	public static javax.swing.JTextArea text1;
 }
