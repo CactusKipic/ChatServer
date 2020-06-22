@@ -26,27 +26,12 @@ public class Window extends JFrame implements ActionListener{
 	private JPanel contentPane;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Window frame = new Window();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	
-	public Window() {
-
+	public Window(String username) {
+		
+		this.username = username;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 429, 486);
@@ -64,22 +49,11 @@ public class Window extends JFrame implements ActionListener{
 		contentPane.add(display);
 		
 		send1 = new JButton("ENVOYER");
-		send1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-					String s = text1.getText();
-					if(s.equals("")) {
-						return;
-					}
-					display.append(username + ":" + s + "\n");
-					text1.setText("");
-				
-			}
-		});
+		send1.addActionListener(this);
 		send1.setBounds(312, 395, 92, 52);
 		contentPane.add(send1);
 		
-		label1 = new JLabel("Chat avec:" + username);
+		label1 = new JLabel("Chat en tant que:" + this.username);
 		label1.setBounds(10, 10, 246, 37);
 		contentPane.add(label1);
 		
@@ -92,26 +66,29 @@ public class Window extends JFrame implements ActionListener{
 		return username;
 	}
 
-	public void sendText() {
+	public void sendText() {/*
 		String s = window_2.text2.getText();
 		if(s.equals("")) {
 			return;
 		}
-		display.append(window_2.username2 + ":" + s + "\n");
+		display.append(window_2.username2 + ":" + s + "\n");*/
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println("Action performed");
 		switch(e.getActionCommand()) {
 			case "ENVOYER":
+				System.out.println("ENVOYER");
 				ChatRoom.getSessionHandler().sendMessage(new Message(username, text1.getText(),
 						new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+				text1.setText("");
 				break;
 		}
 	}
 
 	public void newMessage(Message message) {
-		display.append(message.getDate()+" | "+message.getAuthor()+": "+message.getMessage()+"\r");
+		display.append(message.getDate()+" | "+message.getAuthor()+": "+message.getMessage()+"\n");
 	}
 	
 }

@@ -1,12 +1,11 @@
 package main.network;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.google.gson.Gson;
 
@@ -19,7 +18,7 @@ public class ClientHandler implements Runnable{
 	private Socket socket;
 	private LinkedList<Message> messagePile = new LinkedList<>();
 	private boolean readingPile = false;
-	private BufferedInputStream reader;
+	private BufferedReader reader;
 	private SessionServer session;
 	
 	public ClientHandler(Socket socket) {
@@ -27,6 +26,7 @@ public class ClientHandler implements Runnable{
 	}
 	
 	public void sendMessage(Message message) {
+		System.out.println("Reception message pour diffusion");
 		while(readingPile == true);
 		messagePile.add(message);
 	}
@@ -42,15 +42,18 @@ public class ClientHandler implements Runnable{
             
             try {
 				writer = new PrintWriter(socket.getOutputStream());
-				reader = new BufferedInputStream(socket.getInputStream());
+				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	            
+				//System.out.println("Attente...");
 	            // Attente du Client
 	            String requete = read();
+				//System.out.println("Reçu");
+	            System.out.println("REQ: "+requete);
 	            
 	            // Traitement de la requête du client
 	            String reponse = "";
 	            
-	            switch(requete.substring(0, 4).toUpperCase()){
+	            switch(requete.substring(0, 5).toUpperCase()){
 	               case "STDBY":
 	            	   System.out.println("Standing by.");
 	            	   readingPile = true;
@@ -58,34 +61,40 @@ public class ClientHandler implements Runnable{
 	            		   reponse = "STDBY";
 	            	   else {
 	            		   Message msg = messagePile.pop();
-	            		   reponse = (messagePile.isEmpty() ? "MDMSG" : "LAMSG") +gson.toJson(msg);
+	            		   reponse = (messagePile.isEmpty() ? "LAMSG" : "MDMSG") +gson.toJson(msg);
 	            	   }
 	            	   readingPile = false;
 	                  break;
 	               case "NXMSG":
 	            	   readingPile = true;
             		   Message msg = messagePile.pop();
-            		   reponse = (messagePile.isEmpty() ? "MDMSG" : "LAMSG") +gson.toJson(msg);
+            		   reponse = (messagePile.isEmpty() ? "LAMSG" : "MDMSG") +gson.toJson(msg);
 	            	   readingPile = false;
 	            	   break;
 	               case "MSGSD":
 	            	   if(session != null) {
-	            		   Message message = gson.fromJson(requete.substring(4), Message.class);
+	            		   Message message = gson.fromJson(requete.substring(5), Message.class);
 	            		   session.NewMessage(message);
 	            		   reponse = "ACKMS";
 	            	   }
 	            	   break;
 	               case "CTION":
-	            	   String str = requete.substring(4);
-	            	   List<String> list = Arrays.asList(str.split("|"));
-	            	   session = SessionServer.getSession(list.get(0));
+	            	   String str = requete.substring(5);
+	            	   System.out.println("Split: "+str.split("\\|")[0]+" "+str.split("\\|")[1]);
+	            	   String[] list = str.split("\\|");
+            		   System.out.println("Connexion à une session...");
+	            	   session = SessionServer.getSession(list[0]);
 	            	   if(session == null) {
-	            		   session = SessionServer.createSession(list.get(0));
+	            		   System.out.println("Création de la session");
+	            		   session = SessionServer.createSession(list[0]);
 	            	   }
-	            	   if(session.getClient(list.get(1))==null) {
-		            	   session.addClient(new Client(list.get(1),this));
+            		   System.out.println("Succès ? "+session!=null);
+	            	   if(session.getClient(list[1]) == null) {
+	            		   System.out.println("Session: "+session.getSessionName());
+		            	   session.addClient(new Client(list[1],this));
 		            	   reponse = "ACKCO";
 	            	   }else {
+	            		   System.out.println("Erreur lors de la création ou client pseudo déjà utilisé");
 	            		   reponse = "REFCO";
 	            	   }
 	            	   break;
@@ -99,7 +108,7 @@ public class ClientHandler implements Runnable{
 	            }
 	            
 	            // Envoie réponse
-	            writer.write(reponse);
+	            writer.write(reponse+"\r");
 	            writer.flush();
 	            
 	            if(endConnexion){
@@ -109,6 +118,7 @@ public class ClientHandler implements Runnable{
 	            }        
 			} catch (IOException e) {
 				e.printStackTrace();
+				break;
 			}
 		}
 		
@@ -117,11 +127,7 @@ public class ClientHandler implements Runnable{
 	
    private String read() throws IOException{      
        String res = "";
-       int stream;
-       byte[] b = new byte[1024];
-       while((stream = reader.read(b)) != -1){
-          res += new String(b, 0, stream);
-       }
+       while((res = reader.readLine())==null);
       return res;
    }
 

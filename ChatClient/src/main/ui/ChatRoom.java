@@ -10,9 +10,11 @@ public class ChatRoom {
 	
 	public static void initChatRoom(SessionHandler handler) {
 		session = handler;
-		win = new Window();
+		win = new Window(session.getUsername());
 		win.setLocation(500, 200);
 		win.setVisible(true);
+		Thread t = new Thread(session);
+		t.start();
 	}
 	
 	public static SessionHandler getSessionHandler() {

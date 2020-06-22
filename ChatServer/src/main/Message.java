@@ -2,12 +2,12 @@ package main;
 
 public class Message {
 	
-	private String Author;
+	private String Auteur;
 	private String Message;
 	private String Date;
 	
-	public Message(String Author, String Message, String Date) {
-		this.Author = Author;
+	public Message(String Auteur, String Message, String Date) {
+		this.Auteur = Auteur;
 		this.Message = Message;
 		this.Date = Date;
 	}
@@ -17,7 +17,7 @@ public class Message {
 	}
 	
 	public String getAuthor() {
-		return Author;
+		return Auteur;
 	}
 	
 	public String getDate() {

@@ -32,6 +32,7 @@ public class Server extends JFrame implements ActionListener{
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		System.out.println("Lancement server");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -128,6 +129,7 @@ public class Server extends JFrame implements ActionListener{
 		
 		switch(e.getActionCommand()) {
 			case "REJOINDRE SESSION":
+				System.out.println("Rejoindre session pressed");
 				if(ip.getText() != "" && port.getText() != "" && username.getText() != "" && sessionname.getText() != "")
 				ChatRoom.initChatRoom(new SessionHandler(ip.getText(), Integer.parseInt(port.getText()),
 						username.getText(), sessionname.getText()));

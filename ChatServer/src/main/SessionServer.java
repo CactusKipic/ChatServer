@@ -18,19 +18,35 @@ public class SessionServer extends Session{
 	
 	private static HashMap<String, SessionServer> Sessions = new HashMap<>();
 	
-	private HashMap<String, Client> ListClients = new HashMap<>();
+	private transient HashMap<String, Client> ListClients = new HashMap<>();
 	
 	private SessionServer(String Name) {
 		super(Name);
+		ListClients = new HashMap<>();
+		Sessions.put(this.getSessionName(), this);
+		File f = new File(Main.PATH + Name +"/session.json");
+		if(!f.getParentFile().exists())
+			f.getParentFile().mkdirs();
+		Gson gson = new Gson();
+		String json = gson.toJson(this);
+		try {
+			PrintWriter PW = new PrintWriter(f,"UTF-8");
+			PW.print(json);
+			PW.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private SessionServer(String Name, String Description) {
 		super(Name, Description);
+		ListClients = new HashMap<>();
+		Sessions.put(this.getSessionName(), this);
 		File f = new File(Main.PATH + Name +"/session.json");
 		if(!f.getParentFile().exists())
-			f.mkdirs();
+			f.getParentFile().mkdirs();
 		Gson gson = new Gson();
-		String json = gson.toJson((Session)this);
+		String json = gson.toJson(this);
 		try {
 			PrintWriter PW = new PrintWriter(f,"UTF-8");
 			PW.print(json);
@@ -61,10 +77,15 @@ public class SessionServer extends Session{
 		File f = new File(Main.PATH + Name +"/session.json");
 		Gson gson = new Gson();
 		String json;
+		if(!f.exists())
+			return null;
 		
 	    try {
 			json = new String(Files.readAllBytes(f.toPath()));
-			return (SessionServer) gson.fromJson(json, Session.class);
+			session = (SessionServer) gson.fromJson(json, SessionServer.class);
+			session.ListClients = new HashMap<>();
+			Sessions.put(session.getSessionName(), session);
+			return session;
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -73,7 +94,7 @@ public class SessionServer extends Session{
 	}
 	
 	public static boolean SessionNameAvailable(String name) {
-		File f = new File(Main.PATH + name +"/");
+		File f = new File(Main.PATH + name +"/session.json");
 		return !f.exists();
 	}
 	
@@ -95,6 +116,7 @@ public class SessionServer extends Session{
 	
 	public void NewMessage(Message message) {
 		SaveMessage(message);
+		System.out.println("NB Clients: "+ListClients.size());
 		for(Client client:ListClients.values()) {
 			client.getClientHandler().sendMessage(message);
 		}
@@ -103,7 +125,7 @@ public class SessionServer extends Session{
 	public void SaveMessage(Message message) {
 		File f = new File(Main.PATH + this.getSessionName() +"/"+message.getDate()+".messages");
 		if(!f.exists())
-			f.mkdirs();
+			f.getParentFile().mkdirs();
 		
 		String format = "\r"+message.getDate() + " | "+message.getAuthor()+":\r"+message.getMessage();
 		
